@@ -1,0 +1,85 @@
+{
+  "sizes": [
+    "320x480",
+    "1280x768",
+    "1920x1080"
+  ],
+
+  "pages": [
+    {
+      "name": "homepage",
+      "url": "http://accenture-insights.dev/en-us/",
+      "wait-for-delay": 2000
+    },
+
+
+
+    {
+      "name" : "TREND: artificial-intelligence",
+      "url" : "http://accenture-insights.dev/en-us/technology/artificial-intelligence",
+      "wait-for-delay": 1000
+    },
+    {
+      "name" : "THEME: our-shared-future",
+      "url" : "http://accenture-insights.dev/en-us/our-shared-future",
+      "wait-for-delay": 1000
+    },
+    {
+      "name": "THEME: careers",
+      "url" : "http://accenture-insights.dev/en-us/careers",
+      "wait-for-delay": 1000
+    },
+    {
+      "name" : "Sitemap",
+      "url" : "https://www.accenture-insights.nl/en-us/sitemap",
+      "wait-for-delay": 1000
+    },
+
+
+
+
+    {
+      "name" : "Overview page",
+      "url" : "http://accenture-insights.dev/en-us/articles?query=",
+      "wait-for-delay": 2000
+    },
+
+
+
+
+
+    {
+      "name" : "Article",
+      "url" : "http://accenture-insights.dev/en-us/articles/how-intelligent-automation-robotics-impact-it-service-delivery",
+      "wait-for-delay": 1000
+    },
+    {
+      "name" : "Vacancy",
+      "url" : "http://accenture-insights.dev/en-us/vacancies/internship-robotics-technical-development-00531825",
+      "wait-for-delay": 1000
+    },
+    {
+      "name" : "Profile",
+      "url" : "http://accenture-insights.dev/en-us/our-people/martijn-smit",
+      "wait-for-delay": 1000
+    },
+
+
+
+
+
+
+
+    {
+      "name" : "Microsite",
+      "url" : "http://accenture-insights.dev/en-us/site/innovation-center",
+      "wait-for-delay": 1000
+    },
+    {
+      "name" : "Microsite page",
+      "url" : "http://accenture-insights.dev/en-us/site/innovation-center/shareable-content",
+      "wait-for-delay": 1000
+    }
+
+  ]
+}
