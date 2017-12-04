@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Contracts\Browser;
 use Illuminate\Console\Command;
 use Screen\Capture;
 
@@ -23,17 +24,22 @@ class ImageCapture extends Command
 
     protected $settings = [];
     protected $name = '';
+    /**
+     * @var \App\Contracts\Browser
+     */
+    private $browser;
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param \App\Contracts\Browser $browser
      */
-    public function __construct()
+    public function __construct(Browser $browser)
     {
         parent::__construct();
 
         $this->settings = $this->parseEyesFile();
+        $this->browser = $browser;
     }
 
     /**
@@ -58,27 +64,11 @@ class ImageCapture extends Command
 
     private function handleSize($size) {
         foreach($this->settings['pages'] as $page) {
-            $this->capturePage($page, $size);
+            $this->browser->capture($this->name, $page, $size);
             $this->bar->advance();
         }
     }
 
-    protected function capturePage($page, $size) {
-        $screenCapture = new Capture();
-
-        $screenCapture->setUrl($page['url']);
-        $screenCapture->setBinPath('/usr/local/bin/');
-
-        list($width, $height) = explode('x', $size, 2);
-        $screenCapture->setWidth($width);
-        $screenCapture->setHeight($height);
-        $screenCapture->setImageType(\Screen\Image\Types\Png::FORMAT);
-        $screenCapture->setDelay($page['wait-for-delay']);
-
-         $filePath = "app/.eyes/" . $this->name . '/' . $size . '/' . $page['name'] . '.' . $screenCapture->getImageType()->getFormat();
-
-        $screenCapture->save(storage_path( $filePath ));
-    }
 
     private function parseEyesFile()
     {
