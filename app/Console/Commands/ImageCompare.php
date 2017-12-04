@@ -53,9 +53,13 @@ class ImageCompare extends Command
 
         $files = $this->storage->allFiles( '.eyes/' . $baseline . '/' );
 
+
         $bar = $this->output->createProgressBar(count($files));
         $output = [];
         foreach($files as $file) {
+            if(basename($file) == '.DS_Store') {
+                continue;
+            }
             $output[] = $this->compare($file, $baseline, $current);
             $bar->advance();
         }
