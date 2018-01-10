@@ -34,7 +34,11 @@ trait SupportsPhantom
         static::$phantomProcess = static::buildPhantomProcess();
 
         static::$phantomProcess->start();
-        dd(        static::$phantomProcess , static::$phantomDriver );
+
+        // We wait with execution of the scripts untill we see that the output shows us it's running.
+        while( ! str_contains(static::$phantomProcess->getOutput(), 'running on port')){
+            sleep(1);
+        }
 
         static::afterClass(function () {
             static::stopPhantomDriver();
