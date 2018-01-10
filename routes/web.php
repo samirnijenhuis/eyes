@@ -11,7 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function(){
+    \Artisan::call('image:capture', ['name' => 'test-samir-asd']);
+});
+Route::get('/a', function () {
     $a = [
         [
             "dimension" => "1280x768",

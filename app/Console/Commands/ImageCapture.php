@@ -22,8 +22,27 @@ class ImageCapture extends Command
      */
     protected $description = 'Capture images';
 
+    /**
+     * Array containing all info needed to run the image capture.
+     *
+     * @var array|mixed
+     */
     protected $settings = [];
+
+    /**
+     * The (group) name of the current run.
+     *
+     * @var string
+     */
     protected $name = '';
+
+    /**
+     * Progress bar.
+     *
+     * @var \Symfony\Component\Console\Helper\ProgressBar
+     */
+    private $bar;
+
     /**
      * @var \App\Contracts\Browser
      */
@@ -38,8 +57,8 @@ class ImageCapture extends Command
     {
         parent::__construct();
 
-        $this->settings = $this->parseEyesFile();
         $this->browser = $browser;
+        $this->settings = $this->parseEyesFile();
     }
 
     /**
@@ -62,6 +81,9 @@ class ImageCapture extends Command
         $this->bar->finish();
     }
 
+    /**
+     * @param $size string
+     */
     private function captureForSize($size) {
         foreach($this->settings['pages'] as $page) {
             $this->browser->capture($this->name, $page, $size);

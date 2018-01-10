@@ -2,6 +2,7 @@
 
 namespace App\Browsers;
 
+use App\Browsers\Traits\SupportsPhantom;
 use Exception;
 use Illuminate\Support\Collection;
 use Laravel\Dusk\Browser;
@@ -13,6 +14,7 @@ use ReflectionFunction;
 abstract class AbstractDusk {
 
     use SupportsChrome;
+    use SupportsPhantom;
 
     /**
      * @var string
