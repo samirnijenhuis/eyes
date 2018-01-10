@@ -5,6 +5,12 @@ namespace App\Browsers;
 use App\Contracts\Browser as BrowserContract;
 use Screen\Capture;
 
+/**
+ * Class Phantom
+ *
+ * @package App\Browsers
+ * @deprecated
+ */
 class Phantom implements BrowserContract {
 
     /**
@@ -13,6 +19,7 @@ class Phantom implements BrowserContract {
      * @param $size
      *
      * @return void
+     * @deprecated
      */
     public function capture($group, $page, $size)
     {

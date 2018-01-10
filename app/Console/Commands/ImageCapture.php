@@ -82,7 +82,10 @@ class ImageCapture extends Command
     }
 
     /**
-     * @param $size string
+     * Captures a browser image for each page in the given size/dimension.
+     * @param $size string (e.g. "1920x1080")
+     *
+     * @return void
      */
     private function captureForSize($size) {
         foreach($this->settings['pages'] as $page) {
@@ -91,12 +94,17 @@ class ImageCapture extends Command
         }
     }
 
-
+    /**
+     * Takes the Eyes file and transforms it to an array.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     private function parseEyesFile()
     {
         $file = base_path('eyes.json');
         if( ! file_exists($file)) {
-            throw new \Exception("Eyes file doesn't exist");
+            throw new \Exception("Eyes file doesn't exist ({$file})");
         }
 
         $json = file_get_contents($file);
