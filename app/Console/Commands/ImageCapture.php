@@ -56,13 +56,13 @@ class ImageCapture extends Command
         );
 
         foreach($this->settings['sizes'] as $size) {
-            $this->handleSize($size);
+            $this->captureForSize($size);
         }
 
         $this->bar->finish();
     }
 
-    private function handleSize($size) {
+    private function captureForSize($size) {
         foreach($this->settings['pages'] as $page) {
             $this->browser->capture($this->name, $page, $size);
             $this->bar->advance();
@@ -72,7 +72,12 @@ class ImageCapture extends Command
 
     private function parseEyesFile()
     {
-        $json = file_get_contents(base_path('eyes.json'));
+        $file = base_path('eyes.json');
+        if( ! file_exists($file)) {
+            throw new \Exception("Eyes file doesn't exist");
+        }
+
+        $json = file_get_contents($file);
         return json_decode($json, true);
     }
 }
