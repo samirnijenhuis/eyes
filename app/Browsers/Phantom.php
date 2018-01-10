@@ -2,10 +2,10 @@
 
 namespace App\Browsers;
 
-use App\Contracts\Browser;
+use App\Contracts\Browser as BrowserContract;
 use Screen\Capture;
 
-class Phantom implements Browser {
+class Phantom implements BrowserContract {
 
     /**
      * @param $group
@@ -16,13 +16,16 @@ class Phantom implements Browser {
      */
     public function capture($group, $page, $size)
     {
+        $screenCapture = new Capture();
+        $screenCapture->setBinPath('/usr/local/bin/');
+
 
         $screenCapture->setUrl($page['url']);
-        $screenCapture->setBinPath('/usr/local/bin/');
 
         list($width, $height) = explode('x', $size, 2);
         $screenCapture->setWidth($width);
         $screenCapture->setHeight($height);
+
         $screenCapture->setImageType(\Screen\Image\Types\Png::FORMAT);
         $screenCapture->setDelay($page['wait-for-delay']);
 
