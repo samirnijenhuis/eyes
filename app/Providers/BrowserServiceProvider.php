@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Browsers\Chrome;
 use App\Browsers\Phantom;
 use App\Contracts\Browser;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,7 @@ class BrowserServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Browser::class, Phantom::class);
+//        $this->app->bind(Browser::class, Phantom::class);
+        $this->app->bind(Browser::class, Chrome::class);
     }
 }
