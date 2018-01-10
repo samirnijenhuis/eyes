@@ -67,18 +67,9 @@ trait SupportsPhantom
     protected static function buildPhantomProcess()
     {
         return (new ProcessBuilder())
-            ->setPrefix(realpath('/usr/local/bin/phantomjs')) // Replace with path to phantomjs bin
-            ->setArguments(['-w'])
+            ->setPrefix(realpath('/usr/local/bin/phantomjs')) // @todo modular OR fixed in package.
+            ->setArguments(['--webdriver=8910'])
             ->getProcess();
-//        return (new Process(
-//            '/usr/local/Cellar/phantomjs/2.1.1/bin/phantomjs --webdriver=8910'
-//            [realpath('/usr/local/bin/phantomjs') . ' --webdriver=8910' ]
-//        ));
-
-//        return (new ProcessBuilder())
-//            ->setPrefix('/usr/local/bin/phantomjs') // Replace with path to phantomjs bin
-//            ->setArguments(['--webdriver=8910'])
-//            ->getProcess();
     }
 
     /**
