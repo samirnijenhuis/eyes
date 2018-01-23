@@ -7,6 +7,16 @@ use Illuminate\Filesystem\FilesystemManager as Storage;
 
 class ImageService {
 
+    /**
+     * @var \Illuminate\Filesystem\FilesystemManager
+     */
+    private $storage;
+
+    /**
+     * ImageService constructor.
+     *
+     * @param \Illuminate\Filesystem\FilesystemManager $storage
+     */
     public function __construct(Storage $storage)
     {
         $this->storage = $storage;
