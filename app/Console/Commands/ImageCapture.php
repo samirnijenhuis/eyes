@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Contracts\Browser;
 use Illuminate\Console\Command;
-use Screen\Capture;
 
 class ImageCapture extends Command
 {
@@ -13,7 +12,8 @@ class ImageCapture extends Command
      *
      * @var string
      */
-    protected $signature = 'image:capture {name}';
+    protected $signature = 'image:capture 
+                            {name : Identifier to group your screenshots}';
 
     /**
      * The console command description.
@@ -23,11 +23,25 @@ class ImageCapture extends Command
     protected $description = 'Capture images';
 
     /**
-     * Array containing all info needed to run the image capture.
-     *
-     * @var array|mixed
+     * Default settings for a page.
      */
-    protected $settings = [];
+    const PAGES_DEFAULTS = [
+        "name" => null,
+        "url" => null,
+        "wait-for-delay" => 0,
+        "ignore" => [],
+        "scripts" => [],
+    ];
+
+    /**
+     * @var array
+     */
+    protected $pages = [];
+
+    /**
+     * @var array
+     */
+    protected $sizes = [];
 
     /**
      * The (group) name of the current run.
@@ -58,7 +72,8 @@ class ImageCapture extends Command
         parent::__construct();
 
         $this->browser = $browser;
-        $this->settings = $this->parseEyesFile();
+        $this->sizes   = $this->parseEyesFile('sizes');
+        $this->setPages( $this->parseEyesFile('pages') );
     }
 
     /**
@@ -71,10 +86,10 @@ class ImageCapture extends Command
         $this->name = $this->argument('name');
 
         $this->bar = $this->output->createProgressBar(
-            count($this->settings['sizes']) * count($this->settings['pages'])
+            count($this->sizes) * count($this->pages)
         );
 
-        foreach($this->settings['sizes'] as $size) {
+        foreach($this->sizes as $size) {
             $this->captureForSize($size);
         }
 
@@ -88,10 +103,22 @@ class ImageCapture extends Command
      * @return void
      */
     private function captureForSize($size) {
-        foreach($this->settings['pages'] as $page) {
+        foreach($this->pages as $page) {
             $this->browser->capture($this->name, $page, $size);
             $this->bar->advance();
         }
+    }
+
+    /**
+     * Populate the pages array (merge each page with the defaults).
+     * @param array $pages
+     *
+     * @return void
+     */
+    public function setPages($pages){
+        $this->pages = collect($pages)->map(function($page){
+            return array_merge(self::PAGES_DEFAULTS, array_filter($page));
+        })->toArray();
     }
 
     /**
@@ -100,7 +127,7 @@ class ImageCapture extends Command
      * @return mixed
      * @throws \Exception
      */
-    private function parseEyesFile()
+    private function parseEyesFile($key = null)
     {
         $file = base_path('eyes.json');
         if( ! file_exists($file)) {
@@ -108,6 +135,8 @@ class ImageCapture extends Command
         }
 
         $json = file_get_contents($file);
-        return json_decode($json, true);
+        $settings = json_decode($json, true);
+
+        return data_get($settings, $key);
     }
 }
