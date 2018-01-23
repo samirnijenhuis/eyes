@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Browsers\Traits;
+namespace App\Browsers\Dusk\Traits;
 
 use RuntimeException;
 use Symfony\Component\Process\Process;

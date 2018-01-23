@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Browsers;
+namespace App\Browsers\Dusk;
 
-use App\Browsers\Traits\SupportsPhantom;
+use App\Browsers\Dusk\Traits\SupportsPhantom;
 use Exception;
 use Illuminate\Support\Collection;
 use Laravel\Dusk\Browser;
