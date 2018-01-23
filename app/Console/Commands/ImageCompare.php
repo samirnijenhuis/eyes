@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\ImagesCompared;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemManager as Storage;
 use Imagick;
@@ -50,9 +51,7 @@ class ImageCompare extends Command
         $baseline = $this->argument('before');
         $current = $this->argument('after');
 
-
         $files = $this->storage->allFiles( '.eyes/' . $baseline . '/' );
-
 
         $bar = $this->output->createProgressBar(count($files));
         $output = [];
@@ -64,25 +63,9 @@ class ImageCompare extends Command
             $bar->advance();
         }
 
-        $this->outputHTML($output);
+        event(new ImagesCompared($baseline, $current, $output));
 
         $bar->finish();
-    }
-
-    public function outputHTML($output)
-    {
-        $json = collect($output)->groupBy('filename')->transform(function($value, $key){
-            return
-                ["title" => $key, 'resolutions' => collect($value)->keyBy('dimension'), 'selected' => $value->first()['dimension']];
-        })->values()->toJson();
-
-        $view = view('difference')->with('difference' , $json);
-
-//        $diff_file = str_replace(".eyes/{$this->argument('baseline')}", "" ,$current_file);
-
-        $this->storage->put(".eyes/diff_{$this->argument('before')}_{$this->argument('after')}/output.html", $view);
-
-
     }
 
     public function compare($base_file, $baseline, $current)
