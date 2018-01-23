@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Contracts\Browser;
+use App\Jobs\CapturePage;
+use App\Services\PageService;
 use Illuminate\Console\Command;
 
 class ImageCapture extends Command
@@ -21,34 +23,8 @@ class ImageCapture extends Command
      * @var string
      */
     protected $description = 'Capture images';
+    protected $pagesService;
 
-    /**
-     * Default settings for a page.
-     */
-    const PAGES_DEFAULTS = [
-        "name" => null,
-        "url" => null,
-        "wait-for-delay" => 0,
-        "ignore" => [],
-        "scripts" => [],
-    ];
-
-    /**
-     * @var array
-     */
-    protected $pages = [];
-
-    /**
-     * @var array
-     */
-    protected $sizes = [];
-
-    /**
-     * The (group) name of the current run.
-     *
-     * @var string
-     */
-    protected $name = '';
 
     /**
      * Progress bar.
@@ -58,22 +34,14 @@ class ImageCapture extends Command
     private $bar;
 
     /**
-     * @var \App\Contracts\Browser
-     */
-    private $browser;
-
-    /**
      * Create a new command instance.
      *
-     * @param \App\Contracts\Browser $browser
      */
-    public function __construct(Browser $browser)
+    public function __construct()
     {
         parent::__construct();
 
-        $this->browser = $browser;
-        $this->sizes   = $this->parseEyesFile('sizes');
-        $this->setPages( $this->parseEyesFile('pages') );
+        $this->pagesService = new PageService( );
     }
 
     /**
@@ -83,13 +51,15 @@ class ImageCapture extends Command
      */
     public function handle()
     {
-        $this->name = $this->argument('name');
-
-        $this->bar = $this->output->createProgressBar(
-            count($this->sizes) * count($this->pages)
+        $this->pagesService->setName(
+            $this->argument('name')
         );
 
-        foreach($this->sizes as $size) {
+        $this->bar = $this->output->createProgressBar(
+            $this->pagesService->countPages()
+        );
+
+        foreach($this->pagesService->getSizes() as $size) {
             $this->captureForSize($size);
         }
 
@@ -103,40 +73,12 @@ class ImageCapture extends Command
      * @return void
      */
     private function captureForSize($size) {
-        foreach($this->pages as $page) {
-            $this->browser->capture($this->name, $page, $size);
+        foreach($this->pagesService->getPages() as $page) {
+            dispatch_now(new CapturePage($this->name, $page, $size));
             $this->bar->advance();
         }
     }
 
-    /**
-     * Populate the pages array (merge each page with the defaults).
-     * @param array $pages
-     *
-     * @return void
-     */
-    public function setPages($pages){
-        $this->pages = collect($pages)->map(function($page){
-            return array_merge(self::PAGES_DEFAULTS, array_filter($page));
-        })->toArray();
-    }
 
-    /**
-     * Takes the Eyes file and transforms it to an array.
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    private function parseEyesFile($key = null)
-    {
-        $file = base_path('eyes.json');
-        if( ! file_exists($file)) {
-            throw new \Exception("Eyes file doesn't exist ({$file})");
-        }
 
-        $json = file_get_contents($file);
-        $settings = json_decode($json, true);
-
-        return data_get($settings, $key);
-    }
 }
