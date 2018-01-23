@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\CapturePage;
+
 class PageService {
 
     /**
@@ -18,19 +20,19 @@ class PageService {
     /**
      * @var array
      */
-    protected $pages = [];
+    public $pages = [];
 
     /**
      * @var array
      */
-    protected $sizes = [];
+    public $sizes = [];
 
     /**
      * The (group) name of the current run.
      *
      * @var string
      */
-    protected $name = '';
+    public $name = '';
 
 
     public function __construct()
@@ -42,27 +44,13 @@ class PageService {
     }
 
     /**
-     * Count the amount of pages.
-     *
-     * @return int
+     * @param $name
+     * @param $page
+     * @param $size
      */
-    public function countPages()
+    public function capture($page, $size)
     {
-        return count($this->sizes) * count($this->pages);
-    }
-    public function getPages()
-    {
-        return $this->pages;
-    }
-
-    public function getSizes()
-    {
-        return $this->sizes;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
+        dispatch_now(new CapturePage($this->name, $page, $size));
     }
 
     /**
@@ -81,12 +69,13 @@ class PageService {
     /**
      * Takes the Eyes file and transforms it to an array.
      *
-     * @param null $key
+     * @param null  $key
+     * @param array $default
      *
      * @return mixed
      * @throws \Exception
      */
-    private function parseSettings($key = null)
+    private function parseSettings($key = null, $default = [])
     {
         $file = base_path('eyes.json');
         if( ! file_exists($file)) {
@@ -96,6 +85,17 @@ class PageService {
         $json = file_get_contents($file);
         $settings = json_decode($json, true);
 
-        return data_get($settings, $key);
+        return data_get($settings, $key, $default);
     }
+
+    /**
+     * Count the amount of pages.
+     *
+     * @return int
+     */
+    public function countPages()
+    {
+        return count($this->sizes) * count($this->pages);
+    }
+
 }

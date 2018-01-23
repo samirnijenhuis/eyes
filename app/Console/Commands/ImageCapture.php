@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Contracts\Browser;
-use App\Jobs\CapturePage;
 use App\Services\PageService;
 use Illuminate\Console\Command;
 
@@ -23,8 +21,6 @@ class ImageCapture extends Command
      * @var string
      */
     protected $description = 'Capture images';
-    protected $pagesService;
-
 
     /**
      * Progress bar.
@@ -34,14 +30,20 @@ class ImageCapture extends Command
     private $bar;
 
     /**
-     * Create a new command instance.
-     *
+     * @var \App\Services\PageService
      */
-    public function __construct()
+    private $pagesService;
+
+    /**
+     * ImageCapture constructor.
+     *
+     * @param \App\Services\PageService $pagesService
+     */
+    public function __construct(PageService $pagesService)
     {
         parent::__construct();
 
-        $this->pagesService = new PageService( );
+        $this->pagesService = $pagesService;
     }
 
     /**
@@ -51,15 +53,13 @@ class ImageCapture extends Command
      */
     public function handle()
     {
-        $this->pagesService->setName(
-            $this->argument('name')
-        );
+        $this->pagesService->name = $this->argument('name');
 
         $this->bar = $this->output->createProgressBar(
             $this->pagesService->countPages()
         );
 
-        foreach($this->pagesService->getSizes() as $size) {
+        foreach($this->pagesService->sizes as $size) {
             $this->captureForSize($size);
         }
 
@@ -73,12 +73,10 @@ class ImageCapture extends Command
      * @return void
      */
     private function captureForSize($size) {
-        foreach($this->pagesService->getPages() as $page) {
-            dispatch_now(new CapturePage($this->name, $page, $size));
+        foreach($this->pagesService->pages as $page) {
+            $this->pagesService->capture($page, $size);
             $this->bar->advance();
         }
     }
-
-
 
 }
