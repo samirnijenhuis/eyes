@@ -1,7 +1,7 @@
 # TODO
 * Add config file for 'phantomJS' port, output dir.
 * ~~Add 'ignore-component', 'run script'~~
-* Add events
+* ~~Add events~~
 * Fix route to load images.
 * Add auth.
 * Add concurency
