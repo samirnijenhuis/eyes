@@ -1,10 +1,11 @@
 # TODO
 * Add config file for 'phantomJS' port, output dir.
-* Add 'ignore-component', 'run script'
+* ~~Add 'ignore-component', 'run script'~~
 * Add events
 * Fix route to load images.
 * Add auth.
 * Add concurency
+* Show precentages as actual percentages.
 
 # The Idea
 The idea/project is based on [http://arguseyes.io/](), a tool used for visual image regression on your local dev with a nice output.
