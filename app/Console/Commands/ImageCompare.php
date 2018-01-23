@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\ImagesCompared;
+use App\Services\ImageService;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\FilesystemManager as Storage;
 use Imagick;
@@ -29,16 +30,22 @@ class ImageCompare extends Command
 
 
     private $transparent = false;
+    /**
+     * @var \App\Services\ImageService
+     */
+    private $imageService;
 
     /**
      * Create a new command instance.
      *
      * @param \Illuminate\Filesystem\FilesystemManager $storage
+     * @param \App\Services\ImageService               $imageService
      */
-    public function __construct(Storage $storage)
+    public function __construct(Storage $storage, ImageService $imageService)
     {
         parent::__construct();
         $this->storage = $storage;
+        $this->imageService = $imageService;
     }
 
     /**
@@ -54,12 +61,13 @@ class ImageCompare extends Command
         $files = $this->storage->allFiles( '.eyes/' . $baseline . '/' );
 
         $bar = $this->output->createProgressBar(count($files));
+
         $output = [];
         foreach($files as $file) {
             if(basename($file) == '.DS_Store') {
                 continue;
             }
-            $output[] = $this->compare($file, $baseline, $current);
+            $output[] = $this->imageService->compare($file, $baseline, $current);
             $bar->advance();
         }
 
@@ -68,44 +76,5 @@ class ImageCompare extends Command
         $bar->finish();
     }
 
-    public function compare($base_file, $baseline, $current)
-    {
-        $image1 = new Imagick();
-
-        if($this->option('transparent')) {
-            // Set Lowlight (resulting background) to transparent, not "original image with a bit of opacity"
-            $image1->setOption('lowlight-color','transparent');
-
-            // Switch the default compose operator to Src, like in example
-            $image1->setOption('compose', 'Src');
-        }
-        $image1->setOption('fuzz', '100');
-
-        $image1->readImage(storage_path( "app/" .$base_file));
-
-        // Load the corresponding images.
-        $image2 = new Imagick();
-        $current_file = str_replace(".eyes/{$baseline}", ".eyes/{$current}", $base_file);
-        $image2->readImage(storage_path("app/" .$current_file));
-
-        // Compare image 1 with image 2.
-        $result = $image1->compareImages($image2, Imagick::METRIC_MEANSQUAREERROR);
-        $result[0]->setImageFormat("png");
-
-        $diff_file = str_replace(".eyes/{$current}", ".eyes/diff_{$baseline}_{$current}" ,$current_file);
-
-        // Write file.
-        $this->storage->put($diff_file, $result[0]);
-
-
-        return [
-            "filename" => pathinfo($base_file, PATHINFO_FILENAME),
-            "dimension" => basename(dirname($base_file)),
-            "before" => storage_path("app/" . $base_file),
-            "after" => storage_path("app/" . $current_file),
-            "difference" => storage_path("app/" . $diff_file),
-            "percentage" => $result[1]
-        ];
-    }
 
 }
