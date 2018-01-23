@@ -8,6 +8,7 @@ class PageService {
 
     /**
      * Default settings for a page.
+     * @var array
      */
     const PAGES_DEFAULTS = [
         "name" => null,
@@ -34,7 +35,9 @@ class PageService {
      */
     public $name = '';
 
-
+    /**
+     * PageService constructor.
+     */
     public function __construct()
     {
         $this->sizes   = $this->parseSettings('sizes');
@@ -44,13 +47,25 @@ class PageService {
     }
 
     /**
-     * @param $name
-     * @param $page
-     * @param $size
+     * Capture a page.
+     *
+     * @param array $page
+     * @param string $size e.g. "1920x1080"
      */
     public function capture($page, $size)
     {
         dispatch_now(new CapturePage($this->name, $page, $size));
+    }
+
+
+    /**
+     * Count the amount of pages.
+     *
+     * @return int
+     */
+    public function countPages()
+    {
+        return count($this->sizes) * count($this->pages);
     }
 
     /**
@@ -87,15 +102,4 @@ class PageService {
 
         return data_get($settings, $key, $default);
     }
-
-    /**
-     * Count the amount of pages.
-     *
-     * @return int
-     */
-    public function countPages()
-    {
-        return count($this->sizes) * count($this->pages);
-    }
-
 }
