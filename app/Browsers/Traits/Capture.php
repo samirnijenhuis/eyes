@@ -18,18 +18,19 @@ trait Capture {
      */
     public function capture($group, $page, $size)
     {
+        $page = new PageRepository($page);
+
 
         $this->group = $group;
-        $this->name = $page['name'];
+        $this->name = $page->name;
 
         $this->setUp();
 
 
-        $page = new PageRepository($page);
 
         $this->browse(function (Browser $browser)  use($size, $page) {
             $browser->visit($page->url)
-                ->resize($page->width(), $page->height());
+                ->resize($page->width($size), $page->height($size));
 
             $browser->script($page->scripts());
 
@@ -42,7 +43,7 @@ trait Capture {
                 mkdir($browser::$storeScreenshotsAt . '/' . $size);
             }
 
-            $browser->screenshot($size . '/' . $this->name);
+            $browser->screenshot($size . '/' . "{get_class($this)}-{$this->name}");
         });
 
         session()->flush();

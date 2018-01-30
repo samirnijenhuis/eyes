@@ -48,9 +48,9 @@ class PageRepository implements Arrayable, Jsonable
      *
      * @return int
      */
-    public function width()
+    public function width($size)
     {
-        list($width, $height) = explode('x', $this->page->get('size'), 2);
+        list($width, $height) = explode('x', $size, 2);
         return (int) $width;
     }
 
@@ -61,7 +61,7 @@ class PageRepository implements Arrayable, Jsonable
      */
     public function height()
     {
-        list($width, $height) = explode('x', $this->page->get('size'), 2);
+        list($width, $height) = explode('x', $size, 2);
         return (int) $height;
     }
 
