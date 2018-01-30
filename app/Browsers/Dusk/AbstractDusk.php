@@ -22,6 +22,11 @@ abstract class AbstractDusk {
     protected $group = '';
 
     /**
+     * @var string
+     */
+    protected $name = '';
+
+    /**
      * All of the active browser instances.
      *
      * @var array
