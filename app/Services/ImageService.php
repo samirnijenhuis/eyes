@@ -40,7 +40,7 @@ class ImageService {
         $image2->readImage(storage_path("app/" .$current_file));
 
         // Compare image 1 with image 2.
-        $result = $image1->compareImages($image2, Imagick::METRIC_MEANSQUAREERROR);
+        $result = $image1->compareImages($image2, Imagick::METRIC_ROOTMEANSQUAREDERROR);
         $result[0]->setImageFormat("png");
 
         $diff_file = str_replace(".eyes/{$current}", ".eyes/diff_{$baseline}_{$current}" ,$current_file);
@@ -55,7 +55,7 @@ class ImageService {
             "before" => storage_path("app/" . $base_file),
             "after" => storage_path("app/" . $current_file),
             "difference" => storage_path("app/" . $diff_file),
-            "percentage" => $result[1]
+            "percentage" => round($result[1] * 100, 2),
         ];
     }
 
