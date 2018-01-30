@@ -10,7 +10,7 @@ class PageService {
      * Default settings for a page.
      * @var array
      */
-    const PAGES_DEFAULTS = [
+    const PAGE_DEFAULTS = [
         "name" => null,
         "url" => null,
         "wait-for-delay" => 0,
@@ -54,7 +54,9 @@ class PageService {
      */
     public function capture($page, $size)
     {
-        dispatch_now(new CapturePage($this->name, $page, $size));
+        dispatch_now(
+            new CapturePage($this->name, $page, $size)
+        );
     }
 
 
@@ -76,7 +78,7 @@ class PageService {
      */
     private function transformPages($pages){
         return collect($pages)->map(function($page){
-            return array_merge(self::PAGES_DEFAULTS, array_filter($page));
+            return array_merge(self::PAGE_DEFAULTS, array_filter($page));
         })->toArray();
     }
 
