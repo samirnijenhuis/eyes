@@ -44,7 +44,8 @@ abstract class AbstractDusk {
     {
         Browser::$baseUrl = $this->baseUrl();
 
-        Browser::$storeScreenshotsAt = storage_path("app/.eyes/{$this->getGroup()}");
+        Browser::$storeScreenshotsAt = config('eyes.screenshots_folder') . "/{$this->getGroup()}";
+//        Browser::$storeScreenshotsAt = storage_path("app/.eyes/{$this->getGroup()}");
 
         Browser::$storeConsoleLogAt = base_path('tests/Browser/console');
 

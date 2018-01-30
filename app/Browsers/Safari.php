@@ -30,8 +30,9 @@ final class Safari extends Dusk implements BrowserContract {
      */
     protected function driver()
     {
+        $port = config('eyes.drivers.phantom.port');
         return RemoteWebDriver::create(
-            'http://localhost:8910/wd/hub', DesiredCapabilities::safari()
+            "http://localhost:{$port}/wd/hub" , DesiredCapabilities::safari()
         );
 
     }

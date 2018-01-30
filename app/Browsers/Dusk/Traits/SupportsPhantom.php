@@ -66,9 +66,12 @@ trait SupportsPhantom
      */
     protected static function buildPhantomProcess()
     {
+        $port = config('eyes.drivers.phantom.port');
+        $bin = config('eyes.drivers.phantom.bin');
+
         return (new ProcessBuilder())
-            ->setPrefix(realpath('/usr/local/bin/phantomjs')) // @todo modular OR fixed in package.
-            ->setArguments(['--webdriver=8910'])
+            ->setPrefix(realpath($bin))
+            ->setArguments(["--webdriver={$port}"])
             ->getProcess();
     }
 

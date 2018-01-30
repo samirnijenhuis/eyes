@@ -35,14 +35,16 @@ final class Chrome extends Dusk implements BrowserContract {
         $options = (new ChromeOptions())->addArguments([
 //            '--disable-gpu',
             '--headless',
-//            '--window-size=1024, 768',
         ]);
 
         $capabilities = DesiredCapabilities::chrome()->setCapability(
             ChromeOptions::CAPABILITY, $options
         );
+
+
+        $port =  config('eyes.drivers.chrome.port');
         return RemoteWebDriver::create(
-            'http://localhost:9515', $capabilities
+            "http://localhost:{$port}", $capabilities
         );
 
     }

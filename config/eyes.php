@@ -2,21 +2,21 @@
 
 return [
 
-    'browsers' => [
+    'screenshots_folder' => storage_path('app/.eyes/screenshots'),
+    'console_log_folder' => storage_path('app/.eyes/logs'),
+
+    'drivers' => [
         'phantom' => [
             'enabled' => false,
             'port' => 8910,
             'bin' => '/usr/local/bin/phantomjs',
-            'screenshots_folder' => storage_path('app/.eyes/phantom/screenshots'),
-            'console_log_folder' => storage_path('app/.eyes/phantom/logs'),
         ],
 
         'chrome' => [
             'enabled' => false,
             'port' => 9515,
-            'screenshots_folder' => storage_path('app/.eyes/chrome/screenshots'),
-            'console_log_folder' => storage_path('app/.eyes/chrome/logs'),
         ]
+    ],
 
-    ]
+
 ];
