@@ -10,17 +10,14 @@ trait Capture {
     /**
      * Takes a screenshot from a Dusk-ran browser.
      *
-     * @param $group
-     * @param $page
-     * @param $size
+     * @param                                  $group
+     * @param \App\Repositories\PageRepository $page
+     * @param                                  $size
      *
      * @return void
      */
-    public function capture($group, $page, $size)
+    public function capture($group, PageRepository $page, $size)
     {
-        $page = new PageRepository($page);
-
-
         $this->group = $group;
         $this->name = $page->name;
 

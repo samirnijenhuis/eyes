@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Contracts\Browser;
+use App\Repositories\PageRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,11 +21,11 @@ class CapturePage implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param $name
-     * @param $page
-     * @param $size
+     * @param                                  $name
+     * @param \App\Repositories\PageRepository $page
+     * @param                                  $size
      */
-    public function __construct($name, $page, $size)
+    public function __construct($name, PageRepository $page, $size)
     {
         $this->name = $name;
         $this->page = $page;

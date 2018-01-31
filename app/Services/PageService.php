@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\CapturePage;
+use App\Repositories\PageRepository;
 
 class PageService {
 
@@ -54,6 +55,7 @@ class PageService {
      */
     public function capture($page, $size)
     {
+        $page = new PageRepository($page);
         dispatch_now(
             new CapturePage($this->name, $page, $size)
         );
