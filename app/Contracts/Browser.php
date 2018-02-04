@@ -2,6 +2,8 @@
 
 namespace App\Contracts;
 
+use App\Repositories\PageRepository;
+
 interface Browser {
 
     /**
@@ -11,5 +13,5 @@ interface Browser {
      *
      * @return mixed
      */
-    public function capture($group, $page, $size);
+    public function capture($group, PageRepository $page, $size);
 }
